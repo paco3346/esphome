@@ -817,7 +817,12 @@ bool APIConnection::send_media_player_state(media_player::MediaPlayer *media_pla
   resp.key = media_player->get_object_id_hash();
   resp.state = static_cast<enums::MediaPlayerState>(media_player->state);
   resp.volume = media_player->volume;
-  resp.muted = media_player->is_muted();
+  resp.muted = media_player->muted;
+  resp.source = media_player->source;
+  resp.sound_mode = media_player->sound_mode;
+  resp.repeat_mode = static_cast<enums::MediaPlayerRepeatMode>(media_player->repeat_mode);
+  resp.source_list = media_player->source_list;
+  resp.sound_mode_list = media_player->sound_mode_list;
   return this->send_media_player_state_response(resp);
 }
 bool APIConnection::send_media_player_info(media_player::MediaPlayer *media_player) {
@@ -833,6 +838,22 @@ bool APIConnection::send_media_player_info(media_player::MediaPlayer *media_play
 
   auto traits = media_player->get_traits();
   msg.supports_pause = traits.get_supports_pause();
+  msg.supports_seek = traits.get_supports_seek();
+  msg.supports_volume_set = traits.get_supports_volume_set();
+  msg.supports_volume_mute = traits.get_supports_volume_mute();
+  msg.supports_previous_track = traits.get_supports_previous_track();
+  msg.supports_next_track = traits.get_supports_next_track();
+  msg.supports_turn_on = traits.get_supports_turn_on();
+  msg.supports_turn_off = traits.get_supports_turn_off();
+  msg.supports_play_media = traits.get_supports_play_media();
+  msg.supports_volume_step = traits.get_supports_volume_step();
+  msg.supports_select_source = traits.get_supports_select_source();
+  msg.supports_stop = traits.get_supports_stop();
+  msg.supports_clear_playlist = traits.get_supports_clear_playlist();
+  msg.supports_play = traits.get_supports_play();
+  msg.supports_shuffle_set = traits.get_supports_shuffle_set();
+  msg.supports_select_sound_mode = traits.get_supports_select_sound_mode();
+  msg.supports_repeat_set = traits.get_supports_repeat_set();
 
   return this->send_list_entities_media_player_response(msg);
 }
@@ -845,10 +866,25 @@ void APIConnection::media_player_command(const MediaPlayerCommandRequest &msg) {
   if (msg.has_command) {
     call.set_command(static_cast<media_player::MediaPlayerCommand>(msg.command));
   }
-  if (msg.has_volume) {
-    call.set_volume(msg.volume);
+  if (msg.has_seek_position) {
+    call.seek_position(msg.seek_position);
+  }
+  if (msg.has_volume_level) {
+    call.set_volume(msg.volume_level);
   }
   if (msg.has_media_url) {
+    call.set_media_url(msg.media_url);
+  }
+  if (msg.has_source) {
+    call.set_source(msg.source);
+  }
+  if (msg.has_shuffle_set) {
+    call.set_shuffle(msg.shuffle_set);
+  }
+  if (msg.has_sound_mode) {
+    call.set_sound_mode(msg.sound_mode);
+  }
+  if (msg.has_repeat_mode) {
     call.set_media_url(msg.media_url);
   }
   call.perform();

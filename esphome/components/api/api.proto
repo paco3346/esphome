@@ -1075,17 +1075,39 @@ message ButtonCommandRequest {
 
 // ==================== MEDIA PLAYER ====================
 enum MediaPlayerState {
-  MEDIA_PLAYER_STATE_NONE = 0;
-  MEDIA_PLAYER_STATE_IDLE = 1;
-  MEDIA_PLAYER_STATE_PLAYING = 2;
-  MEDIA_PLAYER_STATE_PAUSED = 3;
+  MEDIA_PLAYER_STATE_OFF = 0;
+  MEDIA_PLAYER_STATE_ON = 1;
+  MEDIA_PLAYER_STATE_IDLE = 2;
+  MEDIA_PLAYER_STATE_PLAYING = 3;
+  MEDIA_PLAYER_STATE_PAUSED = 4;
+  MEDIA_PLAYER_STATE_STANDBY = 5;
+  MEDIA_PLAYER_STATE_BUFFERING = 6;
 }
 enum MediaPlayerCommand {
-  MEDIA_PLAYER_COMMAND_PLAY = 0;
-  MEDIA_PLAYER_COMMAND_PAUSE = 1;
-  MEDIA_PLAYER_COMMAND_STOP = 2;
+  MEDIA_PLAYER_COMMAND_PAUSE = 0;
+  MEDIA_PLAYER_COMMAND_SEEK = 1;
+  MEDIA_PLAYER_COMMAND_VOLUME_SET = 2;
   MEDIA_PLAYER_COMMAND_MUTE = 3;
   MEDIA_PLAYER_COMMAND_UNMUTE = 4;
+  MEDIA_PLAYER_COMMAND_PREVIOUS_TRACK = 5;
+  MEDIA_PLAYER_COMMAND_NEXT_TRACK = 6;
+  MEDIA_PLAYER_COMMAND_TURN_ON = 7;
+  MEDIA_PLAYER_COMMAND_TURN_OFF = 8;
+  MEDIA_PLAYER_COMMAND_PLAY_MEDIA = 9;
+  MEDIA_PLAYER_COMMAND_VOLUME_UP = 10;
+  MEDIA_PLAYER_COMMAND_VOLUME_DOWN = 11;
+  MEDIA_PLAYER_COMMAND_SELECT_SOURCE = 12;
+  MEDIA_PLAYER_COMMAND_STOP = 13;
+  MEDIA_PLAYER_COMMAND_CLEAR_PLAYLIST = 14;
+  MEDIA_PLAYER_COMMAND_PLAY = 15;
+  MEDIA_PLAYER_COMMAND_SHUFFLE_SET = 16;
+  MEDIA_PLAYER_COMMAND_SELECT_SOUND_MODE = 17;
+  MEDIA_PLAYER_COMMAND_REPEAT_SET = 18;
+}
+enum MediaPlayerRepeatMode {
+  MEDIA_PLAYER_REPEAT_MODE_OFF = 0;
+  MEDIA_PLAYER_REPEAT_MODE_ONE = 1;
+  MEDIA_PLAYER_REPEAT_MODE_ALL = 2;
 }
 message ListEntitiesMediaPlayerResponse {
   option (id) = 63;
@@ -1102,6 +1124,22 @@ message ListEntitiesMediaPlayerResponse {
   EntityCategory entity_category = 7;
 
   bool supports_pause = 8;
+  bool supports_seek = 9;
+  bool supports_volume_set = 10;
+  bool supports_volume_mute = 11;
+  bool supports_previous_track = 12;
+  bool supports_next_track = 13;
+  bool supports_turn_on = 14;
+  bool supports_turn_off = 15;
+  bool supports_play_media = 16;
+  bool supports_volume_step = 17;
+  bool supports_select_source = 18;
+  bool supports_stop = 19;
+  bool supports_clear_playlist = 20;
+  bool supports_play = 21;
+  bool supports_shuffle_set = 22;
+  bool supports_select_sound_mode = 23;
+  bool supports_repeat_set = 24;
 }
 message MediaPlayerStateResponse {
   option (id) = 64;
@@ -1112,6 +1150,11 @@ message MediaPlayerStateResponse {
   MediaPlayerState state = 2;
   float volume = 3;
   bool muted = 4;
+  string source = 5;
+  string sound_mode = 6;
+  MediaPlayerRepeatMode repeat_mode = 7;
+  repeated string source_list = 8;
+  repeated string sound_mode_list = 9;
 }
 message MediaPlayerCommandRequest {
   option (id) = 65;
@@ -1124,11 +1167,26 @@ message MediaPlayerCommandRequest {
   bool has_command = 2;
   MediaPlayerCommand command = 3;
 
-  bool has_volume = 4;
-  float volume = 5;
+  bool has_seek_position = 4;
+  float seek_position = 5;
 
-  bool has_media_url = 6;
-  string media_url = 7;
+  bool has_volume_level = 6;
+  float volume_level = 7;
+
+  bool has_media_url = 8;
+  string media_url = 9;
+
+  bool has_source = 10;
+  string source = 11;
+
+  bool has_shuffle_set = 12;
+  bool shuffle_set = 13;
+
+  bool has_sound_mode = 14;
+  string sound_mode = 15;
+
+  bool has_repeat_mode = 16;
+  MediaPlayerRepeatMode repeat_mode = 17;
 }
 
 // ==================== BLUETOOTH ====================

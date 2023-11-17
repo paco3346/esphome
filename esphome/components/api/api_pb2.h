@@ -144,17 +144,39 @@ enum LockCommand : uint32_t {
   LOCK_OPEN = 2,
 };
 enum MediaPlayerState : uint32_t {
-  MEDIA_PLAYER_STATE_NONE = 0,
-  MEDIA_PLAYER_STATE_IDLE = 1,
-  MEDIA_PLAYER_STATE_PLAYING = 2,
-  MEDIA_PLAYER_STATE_PAUSED = 3,
+  MEDIA_PLAYER_STATE_OFF = 0,
+  MEDIA_PLAYER_STATE_ON = 1,
+  MEDIA_PLAYER_STATE_IDLE = 2,
+  MEDIA_PLAYER_STATE_PLAYING = 3,
+  MEDIA_PLAYER_STATE_PAUSED = 4,
+  MEDIA_PLAYER_STATE_STANDBY = 5,
+  MEDIA_PLAYER_STATE_BUFFERING = 6,
 };
 enum MediaPlayerCommand : uint32_t {
-  MEDIA_PLAYER_COMMAND_PLAY = 0,
-  MEDIA_PLAYER_COMMAND_PAUSE = 1,
-  MEDIA_PLAYER_COMMAND_STOP = 2,
+  MEDIA_PLAYER_COMMAND_PAUSE = 0,
+  MEDIA_PLAYER_COMMAND_SEEK = 1,
+  MEDIA_PLAYER_COMMAND_VOLUME_SET = 2,
   MEDIA_PLAYER_COMMAND_MUTE = 3,
   MEDIA_PLAYER_COMMAND_UNMUTE = 4,
+  MEDIA_PLAYER_COMMAND_PREVIOUS_TRACK = 5,
+  MEDIA_PLAYER_COMMAND_NEXT_TRACK = 6,
+  MEDIA_PLAYER_COMMAND_TURN_ON = 7,
+  MEDIA_PLAYER_COMMAND_TURN_OFF = 8,
+  MEDIA_PLAYER_COMMAND_PLAY_MEDIA = 9,
+  MEDIA_PLAYER_COMMAND_VOLUME_UP = 10,
+  MEDIA_PLAYER_COMMAND_VOLUME_DOWN = 11,
+  MEDIA_PLAYER_COMMAND_SELECT_SOURCE = 12,
+  MEDIA_PLAYER_COMMAND_STOP = 13,
+  MEDIA_PLAYER_COMMAND_CLEAR_PLAYLIST = 14,
+  MEDIA_PLAYER_COMMAND_PLAY = 15,
+  MEDIA_PLAYER_COMMAND_SHUFFLE_SET = 16,
+  MEDIA_PLAYER_COMMAND_SELECT_SOUND_MODE = 17,
+  MEDIA_PLAYER_COMMAND_REPEAT_SET = 18,
+};
+enum MediaPlayerRepeatMode : uint32_t {
+  MEDIA_PLAYER_REPEAT_MODE_OFF = 0,
+  MEDIA_PLAYER_REPEAT_MODE_ONE = 1,
+  MEDIA_PLAYER_REPEAT_MODE_ALL = 2,
 };
 enum BluetoothDeviceRequestType : uint32_t {
   BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT = 0,
@@ -1146,6 +1168,62 @@ class SelectCommandRequest : public ProtoMessage {
   bool decode_32bit(uint32_t field_id, Proto32Bit value) override;
   bool decode_length(uint32_t field_id, ProtoLengthDelimited value) override;
 };
+class ListEntitiesSirenResponse : public ProtoMessage {
+ public:
+  std::string object_id{};
+  uint32_t key{0};
+  std::string name{};
+  std::string unique_id{};
+  std::string icon{};
+  bool disabled_by_default{false};
+  std::vector<std::string> tones{};
+  bool supports_duration{false};
+  bool supports_volume{false};
+  enums::EntityCategory entity_category{};
+  void encode(ProtoWriteBuffer buffer) const override;
+#ifdef HAS_PROTO_MESSAGE_DUMP
+  void dump_to(std::string &out) const override;
+#endif
+
+ protected:
+  bool decode_32bit(uint32_t field_id, Proto32Bit value) override;
+  bool decode_length(uint32_t field_id, ProtoLengthDelimited value) override;
+  bool decode_varint(uint32_t field_id, ProtoVarInt value) override;
+};
+class SirenStateResponse : public ProtoMessage {
+ public:
+  uint32_t key{0};
+  bool state{false};
+  void encode(ProtoWriteBuffer buffer) const override;
+#ifdef HAS_PROTO_MESSAGE_DUMP
+  void dump_to(std::string &out) const override;
+#endif
+
+ protected:
+  bool decode_32bit(uint32_t field_id, Proto32Bit value) override;
+  bool decode_varint(uint32_t field_id, ProtoVarInt value) override;
+};
+class SirenCommandRequest : public ProtoMessage {
+ public:
+  uint32_t key{0};
+  bool has_state{false};
+  bool state{false};
+  bool has_tone{false};
+  std::string tone{};
+  bool has_duration{false};
+  uint32_t duration{0};
+  bool has_volume{false};
+  float volume{0.0f};
+  void encode(ProtoWriteBuffer buffer) const override;
+#ifdef HAS_PROTO_MESSAGE_DUMP
+  void dump_to(std::string &out) const override;
+#endif
+
+ protected:
+  bool decode_32bit(uint32_t field_id, Proto32Bit value) override;
+  bool decode_length(uint32_t field_id, ProtoLengthDelimited value) override;
+  bool decode_varint(uint32_t field_id, ProtoVarInt value) override;
+};
 class ListEntitiesLockResponse : public ProtoMessage {
  public:
   std::string object_id{};
@@ -1239,6 +1317,22 @@ class ListEntitiesMediaPlayerResponse : public ProtoMessage {
   bool disabled_by_default{false};
   enums::EntityCategory entity_category{};
   bool supports_pause{false};
+  bool supports_seek{false};
+  bool supports_volume_set{false};
+  bool supports_volume_mute{false};
+  bool supports_previous_track{false};
+  bool supports_next_track{false};
+  bool supports_turn_on{false};
+  bool supports_turn_off{false};
+  bool supports_play_media{false};
+  bool supports_volume_step{false};
+  bool supports_select_source{false};
+  bool supports_stop{false};
+  bool supports_clear_playlist{false};
+  bool supports_play{false};
+  bool supports_shuffle_set{false};
+  bool supports_select_sound_mode{false};
+  bool supports_repeat_set{false};
   void encode(ProtoWriteBuffer buffer) const override;
 #ifdef HAS_PROTO_MESSAGE_DUMP
   void dump_to(std::string &out) const override;
@@ -1255,6 +1349,11 @@ class MediaPlayerStateResponse : public ProtoMessage {
   enums::MediaPlayerState state{};
   float volume{0.0f};
   bool muted{false};
+  std::string source{};
+  std::string sound_mode{};
+  enums::MediaPlayerRepeatMode repeat_mode{};
+  std::vector<std::string> source_list{};
+  std::vector<std::string> sound_mode_list{};
   void encode(ProtoWriteBuffer buffer) const override;
 #ifdef HAS_PROTO_MESSAGE_DUMP
   void dump_to(std::string &out) const override;
@@ -1262,6 +1361,7 @@ class MediaPlayerStateResponse : public ProtoMessage {
 
  protected:
   bool decode_32bit(uint32_t field_id, Proto32Bit value) override;
+  bool decode_length(uint32_t field_id, ProtoLengthDelimited value) override;
   bool decode_varint(uint32_t field_id, ProtoVarInt value) override;
 };
 class MediaPlayerCommandRequest : public ProtoMessage {
@@ -1269,10 +1369,20 @@ class MediaPlayerCommandRequest : public ProtoMessage {
   uint32_t key{0};
   bool has_command{false};
   enums::MediaPlayerCommand command{};
-  bool has_volume{false};
-  float volume{0.0f};
+  bool has_seek_position{false};
+  float seek_position{0.0f};
+  bool has_volume_level{false};
+  float volume_level{0.0f};
   bool has_media_url{false};
   std::string media_url{};
+  bool has_source{false};
+  std::string source{};
+  bool has_shuffle_set{false};
+  bool shuffle_set{false};
+  bool has_sound_mode{false};
+  std::string sound_mode{};
+  bool has_repeat_mode{false};
+  enums::MediaPlayerRepeatMode repeat_mode{};
   void encode(ProtoWriteBuffer buffer) const override;
 #ifdef HAS_PROTO_MESSAGE_DUMP
   void dump_to(std::string &out) const override;

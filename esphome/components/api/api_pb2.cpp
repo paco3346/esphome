@@ -355,14 +355,20 @@ template<> const char *proto_enum_to_string<enums::LockCommand>(enums::LockComma
 #ifdef HAS_PROTO_MESSAGE_DUMP
 template<> const char *proto_enum_to_string<enums::MediaPlayerState>(enums::MediaPlayerState value) {
   switch (value) {
-    case enums::MEDIA_PLAYER_STATE_NONE:
-      return "MEDIA_PLAYER_STATE_NONE";
+    case enums::MEDIA_PLAYER_STATE_OFF:
+      return "MEDIA_PLAYER_STATE_OFF";
+    case enums::MEDIA_PLAYER_STATE_ON:
+      return "MEDIA_PLAYER_STATE_ON";
     case enums::MEDIA_PLAYER_STATE_IDLE:
       return "MEDIA_PLAYER_STATE_IDLE";
     case enums::MEDIA_PLAYER_STATE_PLAYING:
       return "MEDIA_PLAYER_STATE_PLAYING";
     case enums::MEDIA_PLAYER_STATE_PAUSED:
       return "MEDIA_PLAYER_STATE_PAUSED";
+    case enums::MEDIA_PLAYER_STATE_STANDBY:
+      return "MEDIA_PLAYER_STATE_STANDBY";
+    case enums::MEDIA_PLAYER_STATE_BUFFERING:
+      return "MEDIA_PLAYER_STATE_BUFFERING";
     default:
       return "UNKNOWN";
   }
@@ -371,16 +377,58 @@ template<> const char *proto_enum_to_string<enums::MediaPlayerState>(enums::Medi
 #ifdef HAS_PROTO_MESSAGE_DUMP
 template<> const char *proto_enum_to_string<enums::MediaPlayerCommand>(enums::MediaPlayerCommand value) {
   switch (value) {
-    case enums::MEDIA_PLAYER_COMMAND_PLAY:
-      return "MEDIA_PLAYER_COMMAND_PLAY";
     case enums::MEDIA_PLAYER_COMMAND_PAUSE:
       return "MEDIA_PLAYER_COMMAND_PAUSE";
-    case enums::MEDIA_PLAYER_COMMAND_STOP:
-      return "MEDIA_PLAYER_COMMAND_STOP";
+    case enums::MEDIA_PLAYER_COMMAND_SEEK:
+      return "MEDIA_PLAYER_COMMAND_SEEK";
+    case enums::MEDIA_PLAYER_COMMAND_VOLUME_SET:
+      return "MEDIA_PLAYER_COMMAND_VOLUME_SET";
     case enums::MEDIA_PLAYER_COMMAND_MUTE:
       return "MEDIA_PLAYER_COMMAND_MUTE";
     case enums::MEDIA_PLAYER_COMMAND_UNMUTE:
       return "MEDIA_PLAYER_COMMAND_UNMUTE";
+    case enums::MEDIA_PLAYER_COMMAND_PREVIOUS_TRACK:
+      return "MEDIA_PLAYER_COMMAND_PREVIOUS_TRACK";
+    case enums::MEDIA_PLAYER_COMMAND_NEXT_TRACK:
+      return "MEDIA_PLAYER_COMMAND_NEXT_TRACK";
+    case enums::MEDIA_PLAYER_COMMAND_TURN_ON:
+      return "MEDIA_PLAYER_COMMAND_TURN_ON";
+    case enums::MEDIA_PLAYER_COMMAND_TURN_OFF:
+      return "MEDIA_PLAYER_COMMAND_TURN_OFF";
+    case enums::MEDIA_PLAYER_COMMAND_PLAY_MEDIA:
+      return "MEDIA_PLAYER_COMMAND_PLAY_MEDIA";
+    case enums::MEDIA_PLAYER_COMMAND_VOLUME_UP:
+      return "MEDIA_PLAYER_COMMAND_VOLUME_UP";
+    case enums::MEDIA_PLAYER_COMMAND_VOLUME_DOWN:
+      return "MEDIA_PLAYER_COMMAND_VOLUME_DOWN";
+    case enums::MEDIA_PLAYER_COMMAND_SELECT_SOURCE:
+      return "MEDIA_PLAYER_COMMAND_SELECT_SOURCE";
+    case enums::MEDIA_PLAYER_COMMAND_STOP:
+      return "MEDIA_PLAYER_COMMAND_STOP";
+    case enums::MEDIA_PLAYER_COMMAND_CLEAR_PLAYLIST:
+      return "MEDIA_PLAYER_COMMAND_CLEAR_PLAYLIST";
+    case enums::MEDIA_PLAYER_COMMAND_PLAY:
+      return "MEDIA_PLAYER_COMMAND_PLAY";
+    case enums::MEDIA_PLAYER_COMMAND_SHUFFLE_SET:
+      return "MEDIA_PLAYER_COMMAND_SHUFFLE_SET";
+    case enums::MEDIA_PLAYER_COMMAND_SELECT_SOUND_MODE:
+      return "MEDIA_PLAYER_COMMAND_SELECT_SOUND_MODE";
+    case enums::MEDIA_PLAYER_COMMAND_REPEAT_SET:
+      return "MEDIA_PLAYER_COMMAND_REPEAT_SET";
+    default:
+      return "UNKNOWN";
+  }
+}
+#endif
+#ifdef HAS_PROTO_MESSAGE_DUMP
+template<> const char *proto_enum_to_string<enums::MediaPlayerRepeatMode>(enums::MediaPlayerRepeatMode value) {
+  switch (value) {
+    case enums::MEDIA_PLAYER_REPEAT_MODE_OFF:
+      return "MEDIA_PLAYER_REPEAT_MODE_OFF";
+    case enums::MEDIA_PLAYER_REPEAT_MODE_ONE:
+      return "MEDIA_PLAYER_REPEAT_MODE_ONE";
+    case enums::MEDIA_PLAYER_REPEAT_MODE_ALL:
+      return "MEDIA_PLAYER_REPEAT_MODE_ALL";
     default:
       return "UNKNOWN";
   }
@@ -4917,6 +4965,70 @@ bool ListEntitiesMediaPlayerResponse::decode_varint(uint32_t field_id, ProtoVarI
       this->supports_pause = value.as_bool();
       return true;
     }
+    case 9: {
+      this->supports_seek = value.as_bool();
+      return true;
+    }
+    case 10: {
+      this->supports_volume_set = value.as_bool();
+      return true;
+    }
+    case 11: {
+      this->supports_volume_mute = value.as_bool();
+      return true;
+    }
+    case 12: {
+      this->supports_previous_track = value.as_bool();
+      return true;
+    }
+    case 13: {
+      this->supports_next_track = value.as_bool();
+      return true;
+    }
+    case 14: {
+      this->supports_turn_on = value.as_bool();
+      return true;
+    }
+    case 15: {
+      this->supports_turn_off = value.as_bool();
+      return true;
+    }
+    case 16: {
+      this->supports_play_media = value.as_bool();
+      return true;
+    }
+    case 17: {
+      this->supports_volume_step = value.as_bool();
+      return true;
+    }
+    case 18: {
+      this->supports_select_source = value.as_bool();
+      return true;
+    }
+    case 19: {
+      this->supports_stop = value.as_bool();
+      return true;
+    }
+    case 20: {
+      this->supports_clear_playlist = value.as_bool();
+      return true;
+    }
+    case 21: {
+      this->supports_play = value.as_bool();
+      return true;
+    }
+    case 22: {
+      this->supports_shuffle_set = value.as_bool();
+      return true;
+    }
+    case 23: {
+      this->supports_select_sound_mode = value.as_bool();
+      return true;
+    }
+    case 24: {
+      this->supports_repeat_set = value.as_bool();
+      return true;
+    }
     default:
       return false;
   }
@@ -4962,6 +5074,22 @@ void ListEntitiesMediaPlayerResponse::encode(ProtoWriteBuffer buffer) const {
   buffer.encode_bool(6, this->disabled_by_default);
   buffer.encode_enum<enums::EntityCategory>(7, this->entity_category);
   buffer.encode_bool(8, this->supports_pause);
+  buffer.encode_bool(9, this->supports_seek);
+  buffer.encode_bool(10, this->supports_volume_set);
+  buffer.encode_bool(11, this->supports_volume_mute);
+  buffer.encode_bool(12, this->supports_previous_track);
+  buffer.encode_bool(13, this->supports_next_track);
+  buffer.encode_bool(14, this->supports_turn_on);
+  buffer.encode_bool(15, this->supports_turn_off);
+  buffer.encode_bool(16, this->supports_play_media);
+  buffer.encode_bool(17, this->supports_volume_step);
+  buffer.encode_bool(18, this->supports_select_source);
+  buffer.encode_bool(19, this->supports_stop);
+  buffer.encode_bool(20, this->supports_clear_playlist);
+  buffer.encode_bool(21, this->supports_play);
+  buffer.encode_bool(22, this->supports_shuffle_set);
+  buffer.encode_bool(23, this->supports_select_sound_mode);
+  buffer.encode_bool(24, this->supports_repeat_set);
 }
 #ifdef HAS_PROTO_MESSAGE_DUMP
 void ListEntitiesMediaPlayerResponse::dump_to(std::string &out) const {
@@ -4999,6 +5127,70 @@ void ListEntitiesMediaPlayerResponse::dump_to(std::string &out) const {
   out.append("  supports_pause: ");
   out.append(YESNO(this->supports_pause));
   out.append("\n");
+
+  out.append("  supports_seek: ");
+  out.append(YESNO(this->supports_seek));
+  out.append("\n");
+
+  out.append("  supports_volume_set: ");
+  out.append(YESNO(this->supports_volume_set));
+  out.append("\n");
+
+  out.append("  supports_volume_mute: ");
+  out.append(YESNO(this->supports_volume_mute));
+  out.append("\n");
+
+  out.append("  supports_previous_track: ");
+  out.append(YESNO(this->supports_previous_track));
+  out.append("\n");
+
+  out.append("  supports_next_track: ");
+  out.append(YESNO(this->supports_next_track));
+  out.append("\n");
+
+  out.append("  supports_turn_on: ");
+  out.append(YESNO(this->supports_turn_on));
+  out.append("\n");
+
+  out.append("  supports_turn_off: ");
+  out.append(YESNO(this->supports_turn_off));
+  out.append("\n");
+
+  out.append("  supports_play_media: ");
+  out.append(YESNO(this->supports_play_media));
+  out.append("\n");
+
+  out.append("  supports_volume_step: ");
+  out.append(YESNO(this->supports_volume_step));
+  out.append("\n");
+
+  out.append("  supports_select_source: ");
+  out.append(YESNO(this->supports_select_source));
+  out.append("\n");
+
+  out.append("  supports_stop: ");
+  out.append(YESNO(this->supports_stop));
+  out.append("\n");
+
+  out.append("  supports_clear_playlist: ");
+  out.append(YESNO(this->supports_clear_playlist));
+  out.append("\n");
+
+  out.append("  supports_play: ");
+  out.append(YESNO(this->supports_play));
+  out.append("\n");
+
+  out.append("  supports_shuffle_set: ");
+  out.append(YESNO(this->supports_shuffle_set));
+  out.append("\n");
+
+  out.append("  supports_select_sound_mode: ");
+  out.append(YESNO(this->supports_select_sound_mode));
+  out.append("\n");
+
+  out.append("  supports_repeat_set: ");
+  out.append(YESNO(this->supports_repeat_set));
+  out.append("\n");
   out.append("}");
 }
 #endif
@@ -5010,6 +5202,32 @@ bool MediaPlayerStateResponse::decode_varint(uint32_t field_id, ProtoVarInt valu
     }
     case 4: {
       this->muted = value.as_bool();
+      return true;
+    }
+    case 7: {
+      this->repeat_mode = value.as_enum<enums::MediaPlayerRepeatMode>();
+      return true;
+    }
+    default:
+      return false;
+  }
+}
+bool MediaPlayerStateResponse::decode_length(uint32_t field_id, ProtoLengthDelimited value) {
+  switch (field_id) {
+    case 5: {
+      this->source = value.as_string();
+      return true;
+    }
+    case 6: {
+      this->sound_mode = value.as_string();
+      return true;
+    }
+    case 8: {
+      this->source_list.push_back(value.as_string());
+      return true;
+    }
+    case 9: {
+      this->sound_mode_list.push_back(value.as_string());
       return true;
     }
     default:
@@ -5035,6 +5253,15 @@ void MediaPlayerStateResponse::encode(ProtoWriteBuffer buffer) const {
   buffer.encode_enum<enums::MediaPlayerState>(2, this->state);
   buffer.encode_float(3, this->volume);
   buffer.encode_bool(4, this->muted);
+  buffer.encode_string(5, this->source);
+  buffer.encode_string(6, this->sound_mode);
+  buffer.encode_enum<enums::MediaPlayerRepeatMode>(7, this->repeat_mode);
+  for (auto &it : this->source_list) {
+    buffer.encode_string(8, it, true);
+  }
+  for (auto &it : this->sound_mode_list) {
+    buffer.encode_string(9, it, true);
+  }
 }
 #ifdef HAS_PROTO_MESSAGE_DUMP
 void MediaPlayerStateResponse::dump_to(std::string &out) const {
@@ -5049,14 +5276,47 @@ void MediaPlayerStateResponse::dump_to(std::string &out) const {
   out.append(proto_enum_to_string<enums::MediaPlayerState>(this->state));
   out.append("\n");
 
-  out.append("  volume: ");
-  sprintf(buffer, "%g", this->volume);
+  out.append("  seek_position: ");
+  sprintf(buffer, "%g", this->seek_position);
+  out.append(buffer);
+  out.append("\n");
+
+  out.append("  has_volume_level: ");
+  out.append(YESNO(this->has_volume_level));
+  out.append("\n");
+
+  out.append("  volume_level: ");
+  sprintf(buffer, "%g", this->volume_level);
   out.append(buffer);
   out.append("\n");
 
   out.append("  muted: ");
   out.append(YESNO(this->muted));
   out.append("\n");
+
+  out.append("  source: ");
+  out.append("'").append(this->source).append("'");
+  out.append("\n");
+
+  out.append("  sound_mode: ");
+  out.append("'").append(this->sound_mode).append("'");
+  out.append("\n");
+
+  out.append("  repeat_mode: ");
+  out.append(proto_enum_to_string<enums::MediaPlayerRepeatMode>(this->repeat_mode));
+  out.append("\n");
+
+  for (const auto &it : this->source_list) {
+    out.append("  source_list: ");
+    out.append("'").append(it).append("'");
+    out.append("\n");
+  }
+
+  for (const auto &it : this->sound_mode_list) {
+    out.append("  sound_mode_list: ");
+    out.append("'").append(it).append("'");
+    out.append("\n");
+  }
   out.append("}");
 }
 #endif
@@ -5071,11 +5331,39 @@ bool MediaPlayerCommandRequest::decode_varint(uint32_t field_id, ProtoVarInt val
       return true;
     }
     case 4: {
-      this->has_volume = value.as_bool();
+      this->has_seek_position = value.as_bool();
       return true;
     }
     case 6: {
+      this->has_volume_level = value.as_bool();
+      return true;
+    }
+    case 8: {
       this->has_media_url = value.as_bool();
+      return true;
+    }
+    case 10: {
+      this->has_source = value.as_bool();
+      return true;
+    }
+    case 12: {
+      this->has_shuffle_set = value.as_bool();
+      return true;
+    }
+    case 13: {
+      this->shuffle_set = value.as_bool();
+      return true;
+    }
+    case 14: {
+      this->has_sound_mode = value.as_bool();
+      return true;
+    }
+    case 16: {
+      this->has_repeat_mode = value.as_bool();
+      return true;
+    }
+    case 17: {
+      this->repeat_mode = value.as_enum<enums::MediaPlayerRepeatMode>();
       return true;
     }
     default:
@@ -5084,8 +5372,16 @@ bool MediaPlayerCommandRequest::decode_varint(uint32_t field_id, ProtoVarInt val
 }
 bool MediaPlayerCommandRequest::decode_length(uint32_t field_id, ProtoLengthDelimited value) {
   switch (field_id) {
-    case 7: {
+    case 9: {
       this->media_url = value.as_string();
+      return true;
+    }
+    case 11: {
+      this->source = value.as_string();
+      return true;
+    }
+    case 15: {
+      this->sound_mode = value.as_string();
       return true;
     }
     default:
@@ -5099,7 +5395,11 @@ bool MediaPlayerCommandRequest::decode_32bit(uint32_t field_id, Proto32Bit value
       return true;
     }
     case 5: {
-      this->volume = value.as_float();
+      this->seek_position = value.as_float();
+      return true;
+    }
+    case 7: {
+      this->volume_level = value.as_float();
       return true;
     }
     default:
@@ -5110,10 +5410,20 @@ void MediaPlayerCommandRequest::encode(ProtoWriteBuffer buffer) const {
   buffer.encode_fixed32(1, this->key);
   buffer.encode_bool(2, this->has_command);
   buffer.encode_enum<enums::MediaPlayerCommand>(3, this->command);
-  buffer.encode_bool(4, this->has_volume);
-  buffer.encode_float(5, this->volume);
-  buffer.encode_bool(6, this->has_media_url);
-  buffer.encode_string(7, this->media_url);
+  buffer.encode_bool(4, this->has_seek_position);
+  buffer.encode_float(5, this->seek_position);
+  buffer.encode_bool(6, this->has_volume_level);
+  buffer.encode_float(7, this->volume_level);
+  buffer.encode_bool(8, this->has_media_url);
+  buffer.encode_string(9, this->media_url);
+  buffer.encode_bool(10, this->has_source);
+  buffer.encode_string(11, this->source);
+  buffer.encode_bool(12, this->has_shuffle_set);
+  buffer.encode_bool(13, this->shuffle_set);
+  buffer.encode_bool(14, this->has_sound_mode);
+  buffer.encode_string(15, this->sound_mode);
+  buffer.encode_bool(16, this->has_repeat_mode);
+  buffer.encode_enum<enums::MediaPlayerRepeatMode>(17, this->repeat_mode);
 }
 #ifdef HAS_PROTO_MESSAGE_DUMP
 void MediaPlayerCommandRequest::dump_to(std::string &out) const {
@@ -5132,8 +5442,8 @@ void MediaPlayerCommandRequest::dump_to(std::string &out) const {
   out.append(proto_enum_to_string<enums::MediaPlayerCommand>(this->command));
   out.append("\n");
 
-  out.append("  has_volume: ");
-  out.append(YESNO(this->has_volume));
+  out.append("  has_seek_position: ");
+  out.append(YESNO(this->has_seek_position));
   out.append("\n");
 
   out.append("  volume: ");
@@ -5147,6 +5457,38 @@ void MediaPlayerCommandRequest::dump_to(std::string &out) const {
 
   out.append("  media_url: ");
   out.append("'").append(this->media_url).append("'");
+  out.append("\n");
+
+  out.append("  has_source: ");
+  out.append(YESNO(this->has_source));
+  out.append("\n");
+
+  out.append("  source: ");
+  out.append("'").append(this->source).append("'");
+  out.append("\n");
+
+  out.append("  has_shuffle_set: ");
+  out.append(YESNO(this->has_shuffle_set));
+  out.append("\n");
+
+  out.append("  shuffle_set: ");
+  out.append(YESNO(this->shuffle_set));
+  out.append("\n");
+
+  out.append("  has_sound_mode: ");
+  out.append(YESNO(this->has_sound_mode));
+  out.append("\n");
+
+  out.append("  sound_mode: ");
+  out.append("'").append(this->sound_mode).append("'");
+  out.append("\n");
+
+  out.append("  has_repeat_mode: ");
+  out.append(YESNO(this->has_repeat_mode));
+  out.append("\n");
+
+  out.append("  repeat_mode: ");
+  out.append(proto_enum_to_string<enums::MediaPlayerRepeatMode>(this->repeat_mode));
   out.append("\n");
   out.append("}");
 }

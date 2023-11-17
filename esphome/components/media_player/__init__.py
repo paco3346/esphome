@@ -23,9 +23,6 @@ PlayAction = media_player_ns.class_(
 PlayMediaAction = media_player_ns.class_(
     "PlayMediaAction", automation.Action, cg.Parented.template(MediaPlayer)
 )
-ToggleAction = media_player_ns.class_(
-    "ToggleAction", automation.Action, cg.Parented.template(MediaPlayer)
-)
 PauseAction = media_player_ns.class_(
     "PauseAction", automation.Action, cg.Parented.template(MediaPlayer)
 )
@@ -41,6 +38,18 @@ VolumeDownAction = media_player_ns.class_(
 VolumeSetAction = media_player_ns.class_(
     "VolumeSetAction", automation.Action, cg.Parented.template(MediaPlayer)
 )
+MuteAction = media_player_ns.class_(
+    "MuteAction", automation.Action, cg.Parented.template(MediaPlayer)
+)
+UnmuteAction = media_player_ns.class_(
+    "UnmuteAction", automation.Action, cg.Parented.template(MediaPlayer)
+)
+PowerOnAction = media_player_ns.class_(
+    "PowerOnAction", automation.Action, cg.Parented.template(MediaPlayer)
+)
+PowerOffAction = media_player_ns.class_(
+    "PowerOffAction", automation.Action, cg.Parented.template(MediaPlayer)
+)
 
 
 CONF_VOLUME = "volume"
@@ -48,13 +57,30 @@ CONF_ON_IDLE = "on_idle"
 CONF_ON_PLAY = "on_play"
 CONF_ON_PAUSE = "on_pause"
 CONF_MEDIA_URL = "media_url"
+CONF_ON_POWER_ON = "on_power_on"
+CONF_ON_POWER_OFF = "on_power_off"
+CONF_ON_VOLUME_CHANGE = "on_volume_change"
+CONF_ON_MUTED = "on_muted"
+CONF_ON_UNMUTED = "on_unmuted"
+CONF_ON_SOURCE_CHANGED = "on_source_changed"
+CONF_ON_SOUND_MODE_CHANGED = "on_sound_mode_changed"
+CONF_ON_SOURCE_LIST_CHANGED = "on_source_list_changed"
 
 StateTrigger = media_player_ns.class_("StateTrigger", automation.Trigger.template())
 IdleTrigger = media_player_ns.class_("IdleTrigger", automation.Trigger.template())
 PlayTrigger = media_player_ns.class_("PlayTrigger", automation.Trigger.template())
 PauseTrigger = media_player_ns.class_("PauseTrigger", automation.Trigger.template())
+PowerOnTrigger = media_player_ns.class_("PowerOnTrigger", automation.Trigger.template())
+PowerOffTrigger = media_player_ns.class_("PowerOffTrigger", automation.Trigger.template())
+VolumeChangeTrigger = media_player_ns.class_("VolumeChangeTrigger", automation.Trigger.template())
+MutedTrigger = media_player_ns.class_("MutedTrigger", automation.Trigger.template())
+UnmutedTrigger = media_player_ns.class_("UnmutedTrigger", automation.Trigger.template())
+SourceTrigger = media_player_ns.class_("SourceTrigger", automation.Trigger.template())
+SoundModeTrigger = media_player_ns.class_("SoundModeTrigger", automation.Trigger.template())
+SourceListTrigger = media_player_ns.class_("SourceListTrigger", automation.Trigger.template())
 IsIdleCondition = media_player_ns.class_("IsIdleCondition", automation.Condition)
 IsPlayingCondition = media_player_ns.class_("IsPlayingCondition", automation.Condition)
+IsOnCondition = media_player_ns.class_("IsOnCondition", automation.Condition)
 
 
 async def setup_media_player_core_(var, config):
@@ -69,6 +95,30 @@ async def setup_media_player_core_(var, config):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [], conf)
     for conf in config.get(CONF_ON_PAUSE, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_POWER_ON, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_POWER_OFF, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_VOLUME_CHANGE, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_MUTED, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_UNMUTED, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_SOURCE_CHANGED, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_SOUND_MODE_CHANGED, []):
+        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
+        await automation.build_automation(trigger, [], conf)
+    for conf in config.get(CONF_ON_SOURCE_LIST_CHANGED, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
         await automation.build_automation(trigger, [], conf)
 
@@ -102,6 +152,46 @@ MEDIA_PLAYER_SCHEMA = cv.ENTITY_BASE_SCHEMA.extend(
                 cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(PauseTrigger),
             }
         ),
+        cv.Optional(CONF_ON_POWER_ON): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(PowerOnTrigger),
+            }
+        ),
+        cv.Optional(CONF_ON_POWER_OFF): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(PowerOffTrigger),
+            }
+        ),
+        cv.Optional(CONF_ON_VOLUME_CHANGE): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(VolumeChangeTrigger),
+            }
+        ),
+        cv.Optional(CONF_ON_MUTED): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(MutedTrigger),
+            }
+        ),
+        cv.Optional(CONF_ON_UNMUTED): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(UnmutedTrigger),
+            }
+        ),
+        cv.Optional(CONF_ON_SOURCE_CHANGED): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(SourceTrigger),
+            }
+        ),
+        cv.Optional(CONF_ON_SOUND_MODE_CHANGED): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(SoundModeTrigger),
+            }
+        ),
+        cv.Optional(CONF_ON_SOURCE_LIST_CHANGED): automation.validate_automation(
+            {
+                cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(SourceListTrigger),
+            }
+        ),
     }
 )
 
@@ -130,9 +220,6 @@ async def media_player_play_media_action(config, action_id, template_arg, args):
 
 @automation.register_action("media_player.play", PlayAction, MEDIA_PLAYER_ACTION_SCHEMA)
 @automation.register_action(
-    "media_player.toggle", ToggleAction, MEDIA_PLAYER_ACTION_SCHEMA
-)
-@automation.register_action(
     "media_player.pause", PauseAction, MEDIA_PLAYER_ACTION_SCHEMA
 )
 @automation.register_action("media_player.stop", StopAction, MEDIA_PLAYER_ACTION_SCHEMA)
@@ -142,11 +229,26 @@ async def media_player_play_media_action(config, action_id, template_arg, args):
 @automation.register_action(
     "media_player.volume_down", VolumeDownAction, MEDIA_PLAYER_ACTION_SCHEMA
 )
+@automation.register_action(
+    "media_player.mute", MuteAction, MEDIA_PLAYER_ACTION_SCHEMA
+)
+@automation.register_action(
+    "media_player.unmute", UnmuteAction, MEDIA_PLAYER_ACTION_SCHEMA
+)
+@automation.register_action(
+    "media_player.power_on", PowerOnAction, MEDIA_PLAYER_ACTION_SCHEMA
+)
+@automation.register_action(
+    "media_player.power_off", PowerOffAction, MEDIA_PLAYER_ACTION_SCHEMA
+)
 @automation.register_condition(
     "media_player.is_idle", IsIdleCondition, MEDIA_PLAYER_ACTION_SCHEMA
 )
 @automation.register_condition(
     "media_player.is_playing", IsPlayingCondition, MEDIA_PLAYER_ACTION_SCHEMA
+)
+@automation.register_condition(
+    "media_player.is_on", IsOnCondition, MEDIA_PLAYER_ACTION_SCHEMA
 )
 async def media_player_action(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
