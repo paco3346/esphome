@@ -106,6 +106,26 @@ void Display::filled_circle(int center_x, int center_y, int radius, Color color)
     }
   } while (dx <= 0);
 }
+void HOT DisplayBuffer::arc(int x, int y, int radius, int start_angle, int end_angle, Color color) {
+    int i;
+    double angle;
+    double x1, y1, x2, y2;
+
+    // Calculate the first point on the arc
+    angle = (start_angle * M_PI) / 180.0;
+    x1 = x + (radius * cos(angle));
+    y1 = y + (radius * sin(angle));
+
+    // Draw each line segment of the arc
+    for (i = start_angle+1; i <= end_angle; i++) {
+        angle = (i * M_PI) / 180.0;
+        x2 = x + (radius * cos(angle));
+        y2 = y + (radius * sin(angle));
+        this->line(x1, y1, x2, y2, color);
+        x1 = x2;
+        y1 = y2;
+    }
+}
 
 void Display::print(int x, int y, BaseFont *font, Color color, TextAlign align, const char *text) {
   int x_start, y_start;

@@ -200,6 +200,9 @@ class Display {
   /// Draw the outline of a circle centered around [center_x,center_y] with the radius radius with the given color.
   void circle(int center_x, int center_xy, int radius, Color color = COLOR_ON);
 
+  //// Draw an arc centered around [x, y] starting at angle [start_angle] to [end_angle] with the given color
+  void arc(int x, int y, int radius, int start_angle, int end_angle, Color color = COLOR_ON);
+
   /// Fill a circle centered around [center_x,center_y] with the radius radius with the given color.
   void filled_circle(int center_x, int center_y, int radius, Color color = COLOR_ON);
 
